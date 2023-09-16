@@ -1,7 +1,7 @@
 clc
 clear
 % Input video file path
-inputVideoPath = 'input_video.mp4';
+inputVideoPath = '.\input_video.mp4';
 
 % Output video file path
 outputVideoPath = 'output_video.mp4';
@@ -13,10 +13,11 @@ videoObj = VideoReader(inputVideoPath);
 outputVideo = VideoWriter(outputVideoPath, 'MPEG-4');
 outputVideo.FrameRate = videoObj.FrameRate;
 open(outputVideo);
-
+i=0;
 % Process frames while reading the input video
 while hasFrame(videoObj)
-
+    disp(i);
+    i=i+1;
     frame = readFrame(videoObj);
     
     % Process the frame (you can add your processing code here)
