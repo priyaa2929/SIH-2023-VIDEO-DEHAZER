@@ -1,5 +1,6 @@
 clc
 clear
+
 % Input video file path
 inputVideoPath = '.\input_video.mp4';
 
@@ -13,7 +14,10 @@ videoObj = VideoReader(inputVideoPath);
 outputVideo = VideoWriter(outputVideoPath, 'MPEG-4');
 outputVideo.FrameRate = videoObj.FrameRate;
 open(outputVideo);
+
 i=0;
+totalSSIM = 0;
+
 % Process frames while reading the input video
 while hasFrame(videoObj)
     disp(i);
@@ -25,12 +29,27 @@ while hasFrame(videoObj)
     [r,t]=Bounding_function(frame,4);
     processedFrame = r; % Replace with your processing logic
     
+    % Calculate SSIM between original and processed frame
+    frame = im2double(frame);
+    processedFrame = im2double(processedFrame);
+    ssimValue = ssim(frame, processedFrame);
+    
+    % Accumulate SSIM for average calculation
+    totalSSIM = totalSSIM + ssimValue;
+    
+    % Display SSIM for each frame
+    disp(['SSIM for frame ', num2str(i), ': ', num2str(ssimValue)]);
+    
     % Write the processed frame to the output video
     writeVideo(outputVideo, processedFrame);
 end
 
 % Close the output video
 close(outputVideo);
+
+% Calculate and display the average SSIM
+averageSSIM = totalSSIM / i;
+disp(['Average SSIM: ', num2str(averageSSIM)]);
 
 % Display completion message
 fprintf('Video processing complete. Output saved to "%s".\n', outputVideoPath);
